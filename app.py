@@ -6,7 +6,7 @@ import os
 
 @st.cache_resource
 def load_modell():
-    model = load_model(r"C:\Users\ASUS\Desktop\Yeni klasor\model_tf.h5")  # Model dosyanın adını değiştir
+    model = load_model(r"model_tf.h5")  # Model dosyanın adını değiştir
     return model
 
 model = load_modell()
