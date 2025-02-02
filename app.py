@@ -42,4 +42,4 @@ if image:
     #  1- Deniz çöp
     index = np.round(predictions)
 
-    st.write(f"**Tahmin:**{'Hayaley Ağ Algılandı' if index==1 else 'Deniz Çöpü Algılandı'}"),
+    st.write(f"**Tahmin:**{'Hayalet Ağ Algılandı' if index==1 else 'Deniz Çöpü Algılandı'}"),
