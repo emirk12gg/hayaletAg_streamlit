@@ -40,5 +40,6 @@ if image:
     predictions = model.predict(processed_image)
     # 0-Hayalet Ağ
     #  1- Deniz çöp
+    index = np.round(predictions)
 
-    st.write(f"**Tahmin:** {np.round(predictions)}%)"),
+    st.write(f"**Tahmin:**{'Hayaley Ağ Algılandı' if index==1 else 'Deniz Çöpü Algılandı'}"),
