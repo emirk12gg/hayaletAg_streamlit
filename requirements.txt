@@ -2,7 +2,7 @@ numpy==1.26.4
 tf_keras==2.18.0
 pillow==11.1.0
 streamlit
-toarch
+torch
 opencv-python
 ultralytics
 
