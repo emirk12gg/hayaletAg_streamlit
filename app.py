@@ -8,7 +8,7 @@ import os
 # Load YOLOv8 model
 def load_yolo_model():
     try:
-        model = YOLO("best.pt")  # Ensure model file is correctly named and located
+        model = YOLO("best (1).pt")  # Ensure model file is correctly named and located
         return model
     except Exception as e:
         st.error(f"Model loading error: {e}")
