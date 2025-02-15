@@ -11,7 +11,7 @@ def load_yolo_model():
     try:
         # Allow loading of the full model (not just weights)
         with torch.serialization.safe_globals(["ultralytics.nn.tasks.DetectionModel"]):
-            model = YOLO("best.pt")  # Ensure model file is correctly named
+            model = YOLO("best (1).pt")  # Ensure model file is correctly named
         return model
     except Exception as e:
         st.error(f"Model loading error: {e}")
