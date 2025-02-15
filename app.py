@@ -4,11 +4,14 @@ from PIL import Image
 import numpy as np
 import cv2
 import os
+import torch
 
-# Load YOLOv8 model
+# Load YOLOv8 model with PyTorch deserialization fix
 def load_yolo_model():
     try:
-        model = YOLO("best (1).pt")  # Ensure model file is correctly named and located
+        # Allow loading of the full model (not just weights)
+        with torch.serialization.safe_globals(["ultralytics.nn.tasks.DetectionModel"]):
+            model = YOLO("best.pt")  # Ensure model file is correctly named
         return model
     except Exception as e:
         st.error(f"Model loading error: {e}")
