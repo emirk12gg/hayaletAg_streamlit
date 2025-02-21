@@ -1,4 +1,7 @@
 import streamlit as st
+import torch
+from ultralytics.nn.tasks import DetectionModel
+torch.serialization.add_safe_globals([DetectionModel])
 from ultralytics import YOLO
 from PIL import Image
 import os
@@ -10,11 +13,7 @@ def get_model_path():
     return "best.pt"
 
 def load_yolo_model():
-    try:
-        return YOLO(get_model_path())
-    except Exception as e:
-        st.error("Model yüklenirken hata oluştu: " + str(e))
-        return None
+    return YOLO(get_model_path())
 
 model = load_yolo_model()
 
@@ -30,20 +29,16 @@ if uploaded_file is not None:
 elif selected_sample:
     image = Image.open(os.path.join(sample_images_path, selected_sample))
     st.image(image, caption="Örnek Görüntü", use_container_width=True)
-if image and model is not None:
+if image:
     image_np = np.array(image)
-    try:
-        results = model(image_np)
-    except Exception as e:
-        st.error("Tahmin sırasında hata oluştu: " + str(e))
-    else:
-        for result in results:
-            for box in result.boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = float(box.conf[0])
-                cls = int(box.cls[0])
-                label = f"{model.names[cls]} ({conf:.2f})"
-                color = (0, 255, 0)
-                cv2.rectangle(image_np, (x1, y1), (x2, y2), color, 2)
-                cv2.putText(image_np, label, (x1, y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-        st.image(image_np, caption="Tahmin Sonucu", use_container_width=True)
+    results = model(image_np)
+    for result in results:
+        for box in result.boxes:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            conf = float(box.conf[0])
+            cls = int(box.cls[0])
+            label = f"{model.names[cls]} ({conf:.2f})"
+            color = (0, 255, 0)
+            cv2.rectangle(image_np, (x1, y1), (x2, y2), color, 2)
+            cv2.putText(image_np, label, (x1, y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+    st.image(image_np, caption="Tahmin Sonucu", use_container_width=True)
