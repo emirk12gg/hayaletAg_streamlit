@@ -1,15 +1,16 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
+import os
 import numpy as np
 import cv2
-import os
-import torch
 
 @st.cache_resource
+def get_model_path():
+    return "best.pt"
+
 def load_yolo_model():
-    model = YOLO("best (1).pt")  # YOLOv8 modelini yükle
-    return model
+    return YOLO(get_model_path())
 
 model = load_yolo_model()
 
@@ -30,20 +31,15 @@ elif selected_sample:
     st.image(image, caption="Örnek Görüntü", use_container_width=True)
 
 if image:
-    image_np = np.array(image)  # Görüntüyü NumPy dizisine çevir
-
-    results = model(image_np)  # YOLO modeli ile tahmin yap
-
-    # Sonuçları çizmek için OpenCV kullan
+    image_np = np.array(image)
+    results = model(image_np)
     for result in results:
         for box in result.boxes:
-            x1, y1, x2, y2 = map(int, box.xyxy[0])  # Koordinatları al
-            conf = box.conf[0].item()  # Güven skoru
-            cls = int(box.cls[0])  # Sınıf etiketi
-
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            conf = float(box.conf[0])
+            cls = int(box.cls[0])
             label = f"{model.names[cls]} ({conf:.2f})"
-            color = (0, 255, 0)  # Yeşil kutu
+            color = (0, 255, 0)
             cv2.rectangle(image_np, (x1, y1), (x2, y2), color, 2)
             cv2.putText(image_np, label, (x1, y1 + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
     st.image(image_np, caption="Tahmin Sonucu", use_container_width=True)
